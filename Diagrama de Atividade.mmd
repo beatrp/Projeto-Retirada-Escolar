@@ -1,0 +1,37 @@
+stateDiagram-v2
+    direction TB
+
+    [*] --> CadastroResponsavel: Responsável preenche dados (RF-02)
+    CadastroResponsavel --> EnvioDocs: Envia documentos (RF-03)
+    EnvioDocs --> AguardandoAprovacao: Aguarda análise da escola
+
+    state "Análise Administrativa (RF-04)" as Analise {
+        AguardandoAprovacao --> ValidarCadastro
+        state is_approved <<choice>>
+        ValidarCadastro --> is_approved
+    }
+
+    is_approved --> CadastroRejeitado: Dados/Docs Inválidos
+    CadastroRejeitado --> [*]: Notifica Responsável
+
+    is_approved --> CadastroAprovado: Cadastro Validado
+    CadastroAprovado --> VinculoAluno: Escola vincula Responsável ao Aluno (RF-06)
+    
+    state "Fluxo de Retirada (Portaria)" as Retirada {
+        VinculoAluno --> GerarQRCode: Responsável solicita QR Code (RF-07)
+        GerarQRCode --> ApresentarQRCode: Exibe QR Code no App/Navegador
+        ApresentarQRCode --> EscanearQRCode: Funcionário lê QR Code com a câmera (RF-08)
+        
+        state is_valid <<choice>>
+        EscanearQRCode --> is_valid: Sistema valida QR Code
+        
+        is_valid --> QRCodeInvalido: Inválido / Não Autorizado
+        QRCodeInvalido --> RecusarSaida: Notifica erro e recusa saída
+        RecusarSaida --> [*]
+
+        is_valid --> QRCodeValido: Válido e Autorizado
+        QRCodeValido --> RegistrarRetirada: Registra Aluno, Responsável e Horário (RF-09)
+        RegistrarRetirada --> LiberaçãoConcluida: Libera a saída do aluno
+    }
+
+    LiberaçãoConcluida --> [*]
