@@ -1,0 +1,236 @@
+classDiagram
+    %% Classes Principais e Herança
+    class Usuario {
+        -idUsuario: int
+        -nome: string
+        -email: string
+        -senhaHash: string
+        -ativo: boolean
+        +efetuarLogin(email: string, senha: string): boolean
+        +alterarSenha(senhaAtual: string, novaSenha: string): boolean
+        +logout(): void
+    }
+
+    class Responsavel {
+        -idResponsavel: int
+        -cpf: string
+        -telefone: string
+        +cadastrarAluno(aluno: Aluno): void
+        +autorizarTerceiro(terceiro: TerceiroAutorizado): void
+    }
+
+    class TerceiroAutorizado {
+        -idTerceiro: int
+        -documento: string
+        -telefone: string
+        -observacao: string
+        -ativo: boolean
+        +gerarQrCode(): QrCode
+        +revogarAutorizacao(): void
+    }
+
+    class PorteiroFuncionario {
+        -idPorteiro: int
+        -matricula: string
+        -turno: string
+        +escanearQrCode(qr: QrCode): boolean
+        +registrarSaida(saida: Saida): void
+    }
+
+    class Administrador {
+        -idAdministrador: int
+        +gerenciarUsuarios(): void
+        +configurarParametros(param: Parametro): void
+        +gerarRelatorios(filtro: FiltroRelatorio): Relatorio
+    }
+
+    Usuario <|-- Responsavel
+    Usuario <|-- TerceiroAutorizado
+    Usuario <|-- PorteiroFuncionario
+    Usuario <|-- Administrador
+
+    %% Perfil e Sessão
+    class UsuarioPerfil {
+        -idUsuario: int
+        -tipo: TipoUsuario
+        -dataCadastro: datetime
+        -ativo: boolean
+        +temPermissao(recurso: string): boolean
+    }
+
+    class Sessao {
+        -idSessao: int
+        -idUsuario: int
+        -token: string
+        -dataLogin: datetime
+        -dataExpiracao: datetime
+        -ativa: boolean
+        +encerrar(): void
+    }
+
+    class Auditoria {
+        -idAuditoria: int
+        -idUsuario: int
+        -acao: string
+        -entidade: string
+        -idEntidade: int
+        -dataHora: datetime
+        -ip: string
+        +registrar(): void
+    }
+
+    Usuario "1" *-- "1..*" UsuarioPerfil
+    UsuarioPerfil "1" <-- "0..*" Sessao
+    UsuarioPerfil .. Auditoria
+
+    %% Aluno e Autorizações
+    class Aluno {
+        -idAluno: int
+        -nome: string
+        -dataNascimento: date
+        -turma: string
+        -ativo: boolean
+        +adicionarResponsavel(resp: Responsavel): void
+        +removerResponsavel(resp: Responsavel): void
+    }
+
+    class AutorizacaoRetirada {
+        -idAutorizacao: int
+        -idAluno: int
+        -idTerceiro: int
+        -responsavel: int
+        -dataInicio: date
+        -dataFim: date
+        -observacao: string
+        -ativa: boolean
+        +autorizar(): void
+        +revogar(): void
+        +estaAtiva(): boolean
+    }
+
+    Responsavel "1" -- "0..*" Aluno : possui
+    Aluno "1" -- "0..*" AutorizacaoRetirada : autoriza
+    TerceiroAutorizado "1" <-- "0..*" AutorizacaoRetirada
+
+    %% Processo de Saída e QR Code
+    class QrCode {
+        -idQrCode: int
+        -idAutorizacao: int
+        -codigo: string
+        -dataGeracao: datetime
+        -dataExpiracao: datetime
+        -status: StatusQrCode
+        +gerar(): void
+        +validar(): boolean
+        +expirar(): void
+    }
+
+    class Saida {
+        -idSaida: int
+        -idAluno: int
+        -idTerceiro: int
+        -idPorteiro: int
+        -idQrCode: int
+        -dataHora: datetime
+        -local: string
+        -observacao: string
+        -status: StatusSaida
+        +confirmar(): void
+        +cancelar(): void
+    }
+
+    PorteiroFuncionario "1" -- "0..*" QrCode
+    AutorizacaoRetirada "1" <-- "0..*" QrCode
+    QrCode "1" <-- "0..*" Saida
+
+    %% Notificação, Parâmetro e Relatório
+    class Notificacao {
+        -idNotificacao: int
+        -idSaida: int
+        -idResponsavel: int
+        -canal: CanalNotificacao
+        -mensagem: string
+        -dataHora: datetime
+        -status: StatusNotificacao
+        +enviar(): void
+        +marcarComoEnviada(): void
+    }
+
+    class Parametro {
+        -idParametro: int
+        -chave: string
+        -valor: string
+        -descricao: string
+        -dataAtualizacao: datetime
+        +obter(chave: string): string
+        +salvar(): void
+    }
+
+    class Relatorio {
+        -idRelatorio: int
+        -tipo: TipoRelatorio
+        -filtros: string
+        -dataGeracao: datetime
+        -geradoPor: int
+        -arquivoUrl: string
+        +gerar(): void
+        +baixar(): void
+    }
+
+    Saida "1" <-- "0..*" Notificacao
+    Aluno "1" -- "0..*" Parametro
+    AutorizacaoRetirada "1" -- "0..*" Relatorio
+
+    %% Enums
+    class TipoUsuario {
+        <<enum>>
+        RESPONSAVEL
+        TERCEIRO_AUTORIZADO
+        PORTEIRO_FUNCIONARIO
+        ADMINISTRADOR
+    }
+
+    class StatusQrCode {
+        <<enum>>
+        ATIVO
+        UTILIZADO
+        EXPIRADO
+        CANCELADO
+    }
+
+    class StatusSaida {
+        <<enum>>
+        CONFIRMADA
+        CANCELADA
+    }
+
+    class CanalNotificacao {
+        <<enum>>
+        PUSH
+        EMAIL
+        SMS
+    }
+
+    class StatusNotificacao {
+        <<enum>>
+        PENDENTE
+        ENVIADA
+        ERRO
+    }
+
+    class TipoRelatorio {
+        <<enum>>
+        SAIDAS
+        SAIDAS_POR_ALUNO
+        SAIDAS_POR_PERIODO
+        USUARIOS
+        AUTORIZACOES
+    }
+
+    %% Relações com Enums
+    UsuarioPerfil ..> TipoUsuario
+    QrCode ..> StatusQrCode
+    Saida ..> StatusSaida
+    Notificacao "1" -- "1" CanalNotificacao
+    Notificacao "1" -- "1" StatusNotificacao
+    Relatorio ..> TipoRelatorio
