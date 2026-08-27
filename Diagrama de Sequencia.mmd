@@ -1,0 +1,47 @@
+sequenceDiagram
+    autonumber
+    actor Resp as Responsável Legal
+    actor Func as Funcionário (Portaria)
+    participant App as App Mobile / Web
+    participant Server as Servidor (Node.js)
+    participant DB as Banco de Dados
+
+    %% Fase 1: Geração do QR Code
+    rect rgb(240, 248, 255)
+        note over Resp, App: Geração do QR Code (RF-07)
+        Resp->>App: Solicita geração de QR Code de retirada
+        App->>Server: Requisita token/dados da retirada (ID Responsável + ID Aluno)
+        Server->>DB: Consulta autorização do vínculo (RF-06)
+        DB-->>Server: Retorna vínculo ativo e aprovado
+        Server-->>App: Retorna código único assinado
+        App-->>Resp: Exibe QR Code na tela (disponível offline)
+    end
+
+    %% Fase 2: Leitura e Validação
+    rect rgb(255, 248, 240)
+        note over Func, DB: Leitura e Validação do QR Code (RF-08)
+        Resp->>Func: Apresenta o QR Code na portaria
+        Func->>App: Escaneia o QR Code usando a câmera
+        App->>Server: Envia payload do QR Code para validação
+        Server->>DB: Verifica integridade e autorização do QR Code
+        alt QR Code Válido e Autorizado
+            DB-->>Server: Confirmação de dados (Aluno, Responsável e Autorização)
+            Server-->>App: Sucesso (Exibe dados do aluno e responsável na tela)
+        else QR Code Inválido ou Não Autorizado
+            DB-->>Server: Falha / Vínculo Inválido
+            Server-->>App: Erro (Exibe mensagem de recusa)
+        end
+    end
+
+    %% Fase 3: Registro da Retirada
+    rect rgb(240, 255, 240)
+        note over Func, DB: Registro da Retirada (RF-09)
+        opt Validação Com Sucesso
+            Func->>App: Confirma liberação do aluno
+            App->>Server: Solicita registro de retirada
+            Server->>DB: Salva registro (Aluno, Responsável, Data/Hora atual)
+            DB-->>Server: Confirmação de salvamento
+            Server-->>App: Confirmação de retirada realizada
+            App-->>Func: Notifica liberação concluída
+        end
+    end
