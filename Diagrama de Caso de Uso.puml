@@ -1,0 +1,70 @@
+@startuml
+skinparam actorStyle human
+left to right direction
+
+' Definição e Agrupamento dos Atores
+actor "Responsável\n(Pai/Mãe/Tutor)" as Resp
+actor "Terceiro Autorizado" as Terceiro
+actor "Aluno" as Aluno
+actor "Porteiro/Funcionário" as Porteiro
+actor "Administrador" as Admin
+
+rectangle "QRSTUDY - SISTEMA DE RETIRADA ESCOLAR" {
+    
+    package "Autenticação & Acesso" {
+        usecase "Efetuar Login" as UC1
+    }
+
+    package "Gestão pelo Responsável / Terceiro" {
+        usecase "Gerar QR Code Dinâmico" as UC2
+        usecase "Cadastrar Terceiro" as UC3
+        usecase "Gerar QR Code para Terceiro" as UC4
+        usecase "Consultar Histórico" as UC5
+        usecase "Receber Notificação de Saída" as UC6
+    }
+
+    package "Operação da Portaria" {
+        usecase "Escanear QR Code" as UC8
+        usecase "Validar Autorização" as UC9
+        usecase "Bloquear Saída" as UC10
+        usecase "Confirmar Saída" as UC11
+        usecase "Notificar Responsável" as UC12
+    }
+
+    package "Administração do Sistema" {
+        usecase "Gerenciar Usuários" as UC14
+        usecase "Gerar Relatórios de Fluxo" as UC15
+        usecase "Configurar Parâmetros" as UC16
+    }
+}
+
+' Relações dos Atores
+Resp --> UC1
+Resp --> UC2
+Resp --> UC3
+Resp --> UC4
+Resp --> UC5
+Resp --> UC6
+
+Terceiro --> UC1
+Terceiro --> UC2
+Terceiro --> UC3
+Terceiro --> UC4
+
+Aluno --> UC6
+
+Porteiro --> UC1
+Porteiro --> UC8
+
+Admin --> UC1
+Admin --> UC14
+Admin --> UC15
+Admin --> UC16
+
+' Inclusões e Extensões
+UC8 .> UC9 : <<include>>
+UC9 .> UC10 : <<extend>>
+UC9 .> UC11 : <<extend>>
+UC11 .> UC12 : <<extend>>
+
+@enduml
