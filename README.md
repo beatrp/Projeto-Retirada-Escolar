@@ -1,8 +1,6 @@
 # Projeto Retirada Escolar
 
-Repositório dedicado ao Projeto de Retirada Escolar.
-
-## Visão Geral
+---
 
 Este projeto tem como objetivo organizar e facilitar o processo de retirada escolar, proporcionando uma visão clara e estruturada sobre a rotina de alunos, responsáveis e acompanhamento escolar.
 
