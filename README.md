@@ -26,21 +26,3 @@ flowchart TD
     E --> G[Registro finalizado]
     F --> H[Contato com responsável]
 ```
-
-## Estrutura do Repositório
-
-Este repositório pode ser utilizado para:
-
-- documentar regras e processos;
-- armazenar diagramas e fluxos;
-- registrar requisitos do projeto;
-- evoluir com novas funcionalidades e versões.
-
-## Possíveis áreas de desenvolvimento
-
-- Cadastro de alunos;
-- Cadastro de responsáveis;
-- Controle de autorizações;
-- Registro de retiradas;
-- Histórico de movimentações;
-- Dashboard de acompanhamento.
