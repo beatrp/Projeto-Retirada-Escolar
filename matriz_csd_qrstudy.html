@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matriz CSD - Projeto QRStudy</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        header {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eef2f5;
+        }
+
+        .header-item {
+            background-color: #f8fafc;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .header-item h3 {
+            font-size: 0.85rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .header-item p {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .csd-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .column {
+            background-color: #f8fafc;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .column-header {
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .certezas .column-header { background-color: #3b82f6; }
+        .suposicoes .column-header { background-color: #22c55e; }
+        .duvidas .column-header { background-color: #ef4444; }
+
+        .card {
+            background-color: white;
+            border-radius: 6px;
+            padding: 14px;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            border-left: 4px solid transparent;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .certezas .card {
+            background-color: #eff6ff;
+            border-left-color: #3b82f6;
+            color: #1e3a8a;
+        }
+
+        .suposicoes .card {
+            background-color: #f0fdf4;
+            border-left-color: #22c55e;
+            color: #14532d;
+        }
+
+        .duvidas .card {
+            background-color: #fef2f2;
+            border-left-color: #ef4444;
+            color: #7f1d1d;
+        }
+
+        /* Post-it folded corner effect */
+        .card::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            border-width: 8px;
+            border-style: solid;
+            display: block;
+            width: 0;
+        }
+
+        .certezas .card::after {
+            border-color: #dbeafe #ffffff #ffffff #dbeafe;
+        }
+
+        .suposicoes .card::after {
+            border-color: #dcfce7 #ffffff #ffffff #dcfce7;
+        }
+
+        .duvidas .card::after {
+            border-color: #fee2e2 #ffffff #ffffff #fee2e2;
+        }
+
+        @media print {
+            body { padding: 0; background-color: white; }
+            .container { box-shadow: none; }
+            .card:hover { transform: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="header-item">
+                <h3>Membros do Grupo</h3>
+                <p>Beatriz Rogich Proença, Marcelle Góes da Silva, Mavelyn Almeida Rodrigues Leme</p>
+            </div>
+            <div class="header-item">
+                <h3>Tema Previsto</h3>
+                <p>QRStudy – Sistema de Retirada Escolar por QR Code (Web & Mobile)</p>
+            </div>
+            <div class="header-item">
+                <h3>Problema Proposto</h3>
+                <p>Controle manual de saída de alunos gerando filas, atrasos e riscos de segurança na entrega a pessoas não autorizadas.</p>
+            </div>
+        </header>
+
+        <main class="csd-grid">
+            <!-- CERTEZAS -->
+            <section class="column certezas">
+                <div class="column-header">Certezas</div>
+
+                <div class="card">
+                    <strong>Tecnologias Definidas:</strong> O projeto utilizará Node.js no back-end, React (Web), Tailwind CSS e React Native para o aplicativo mobile.
+                </div>
+                <div class="card">
+                    <strong>Público-Alvo e Perfil de Acesso:</strong> Foco em escolas infantis e fundamentais. Perfis: Administradores da escola, funcionários da portaria e responsáveis legais.
+                </div>
+                <div class="card">
+                    <strong>Limites Financeiros e Prazos:</strong> Custo total teto de R$ 300.000,00. Prazos finais: Desenvolvimento até 12/11/2027 e Implantação até 12/02/2028.
+                </div>
+                <div class="card">
+                    <strong>Uso Offline do QR Code:</strong> O aplicativo mobile permitirá armazenar o QR Code para apresentação mesmo sem internet no celular do responsável.
+                </div>
+                <div class="card">
+                    <strong>Conformidade Legal:</strong> O sistema deve obrigatoriamente estar em conformidade com a LGPD (Lei Geral de Proteção de Dados).
+                </div>
+                <div class="card">
+                    <strong>Fora do Escopo:</strong> Não inclui compra de hardware (tablets/leitores), instalação de rede/internet, servidores físicos e treinamentos extensivos.
+                </div>
+            </section>
+
+            <!-- SUPOSIÇÕES -->
+            <section class="column suposicoes">
+                <div class="column-header">Suposições</div>
+
+                <div class="card">
+                    <strong>Adoção Digital:</strong> Supõe-se que a maioria dos responsáveis possui smartphones compatíveis e facilidade para gerar o QR Code.
+                </div>
+                <div class="card">
+                    <strong>Adaptação da Portaria:</strong> Supõe-se que os funcionários da portaria se adaptarão rapidamente à transição das listas impressas para o aplicativo/tablet.
+                </div>
+                <div class="card">
+                    <strong>Qualidade de Leitura de Câmera:</strong> Supõe-se que dispositivos de entrada na portaria conseguirão ler os QR Codes mesmo com telas de brilho baixo ou arranhadas.
+                </div>
+                <div class="card">
+                    <strong>Capacidade em Picos:</strong> Supõe-se que a infraestrutura aguentará acessos e validações simultâneas nos exatos horários de saída dos alunos.
+                </div>
+                <div class="card">
+                    <strong>Sincronização Offline na Escola:</strong> Supõe-se que o sistema armazenará localmente na portaria as validações caso ocorra uma queda temporária de internet na escola.
+                </div>
+            </section>
+
+            <!-- DÚVIDAS -->
+            <section class="column duvidas">
+                <div class="column-header">Dúvidas</div>
+
+                <div class="card">
+                    <strong>Planos de Contingência:</strong> Qual o fluxo da portaria caso o responsável chegue sem bateria no celular, sem celular ou sem o QR Code em mãos?
+                </div>
+                <div class="card">
+                    <strong>Autorização de Terceiros:</strong> Como o sistema lidará com liberação pontual para terceiros (ex: tios, motoristas de aplicativo ou vizinhos) de última hora?
+                </div>
+                <div class="card">
+                    <strong>Prazo para Aprovação Interna:</strong> Quanto tempo a secretaria levará para validar a documentação anexada pelos responsáveis antes do acesso?
+                </div>
+                <div class="card">
+                    <strong>Carga Inicial de Dados:</strong> Como será feita a importação em massa dos alunos e turmas cadastrados no sistema atual da escola (via CSV/Excel)?
+                </div>
+                <div class="card">
+                    <strong>Notificações em Tempo Real:</strong> Haverá envio de alertas instantâneos (Push/SMS) aos pais no momento exato em que o aluno for validado na portaria?
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>
