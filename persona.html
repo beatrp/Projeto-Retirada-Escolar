@@ -1,251 +1,135 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Persona - QRStudy</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+ 3 perfis principais do projeto **QRStudy**: **Responsável (Pai/Mãe)**, **Membro da Direção Escolar** e **Funcionário da Segurança/Portaria**.
 
-        body {
-            background-color: #f0f2f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
+---
 
-        /* Contentor em proporção Slide (16:9) */
-        .slide-container {
-            width: 1200px;
-            height: 675px;
-            background-color: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            padding: 25px;
-            display: flex;
-            gap: 20px;
-            position: relative;
-            overflow: hidden;
-        }
+### **Persona 1: Responsável (Pai / Mãe)**
 
-        /* Coluna Esquerda: Foto e Perfil */
-        .left-column {
-            width: 28%;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+#### **Cartão Lateral**
 
-        .avatar-card {
-            width: 100%;
-            height: 260px;
-            border-radius: 10px;
-            overflow: hidden;
-            background-color: #ddd;
-        }
+* **Nome:** Mariana Silva
+* **Frase:** *"Preciso de um processo de saída rápido e seguro para o meu filho na escola, sem ter de ficar parada longos minutos em filas na portaria."*
 
-        .avatar-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+#### **Q1 - DEMOGRÁFICOS**
 
-        .name-card {
-            background-color: #3b28cc;
-            color: white;
-            padding: 20px 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
+* **<Cargo, com e o onde quê\ trabalha>:** Analista de Marketing numa empresa privada no centro da cidade.
+* **<Idade, de experiência\ nível>:** 34 anos | Utilizadora ativa de aplicações móveis e serviços digitais no dia a dia.
+* **<Escolaridade, Conhecimento>:** Ensino Superior Completo | Conhecimento intermediário/avançado em tecnologia.
 
-        .name-card h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-        }
+#### **Q2 - NECESSIDADES E OBJETIVOS**
 
-        .quote-card {
-            background-color: #f8f9fa;
-            border-left: 4px solid #3b28cc;
-            padding: 15px;
-            border-radius: 6px;
-            font-style: italic;
-            color: #555;
-            font-size: 0.95rem;
-            line-height: 1.4;
-            flex-grow: 1;
-            display: flex;
-            align-items: center;
-        }
+* **<O / alcançar?\ ela ele que quer>:** Retirar o filho da escola com agilidade ao final do turno sem perder tempo em filas organizadas manualmente.
 
-        /* Coluna Direita: Grelha 2x2 dos Quadrantes */
-        .right-column {
-            width: 72%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
-            gap: 15px;
-        }
 
-        .quadrant {
-            background-color: #f4f5f7;
-            border-radius: 10px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #e1e4e8;
-        }
+* **<O / ela ele objetivo?\ para precisa que realizar seu>:** Uma forma prática de comprovar a sua autorização de retirada diretamente no smartphone, com garantia de funcionamento mesmo sem sinal de internet na porta da escola.
 
-        .quadrant-header {
-            background-color: #a3e635;
-            color: #1a3a00;
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            margin-bottom: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
 
-        .field-group {
-            margin-bottom: 10px;
-        }
 
-        .field-group:last-child {
-            margin-bottom: 0;
-        }
+#### **Q3 - COMPORTAMENTOS E PREFERÊNCIAS**
 
-        .field-label {
-            font-size: 0.8rem;
-            color: #666;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
+* **<O / ela ele gosta?\ que>:** De soluções digitais rápidas, notificações instantâneas de confirmação e processos bem organizados.
+* **<O / de ela ele faz melhor?\ que>:** Gerir a rotina familiar e compromissos diários através do telemóvel.
+* **<Como / de ela ele fazer gosta isso?>:** Gerando e apresentando o QR Code de autorização na tela do telemóvel para a equipe da portaria.
 
-        .field-content {
-            font-size: 0.9rem;
-            color: #222;
-            line-height: 1.35;
-        }
 
-        .field-content ul {
-            list-style-position: inside;
-            padding-left: 5px;
-        }
 
-        .field-content li {
-            margin-bottom: 3px;
-        }
-    </style>
-</head>
-<body>
+#### **Q4 - DIFICULDADES**
 
-    <div class="slide-container">
-        
-        <!-- Coluna da Esquerda (Identificação da Persona) -->
-        <div class="left-column">
-            <div class="avatar-card">
-                <!-- Imagem de Perfil -->
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" alt="Foto do Responsável">
-            </div>
-            
-            <div class="name-card">
-                <h2>Mariana Silva</h2>
-            </div>
-            
-            <div class="quote-card">
-                "<span id="quote">Preciso de um processo de saída rápido e seguro para o meu filho na escola, sem ter de ficar parada longos minutos em filas na portaria.</span>"
-            </div>
-        </div>
+* **<Quais dificuldades?\ suas são>:** Filas longas de carros/pedestres no horário de pico e a dependência de identificação visual ou listas impressas.
 
-        <!-- Grelha dos 4 Quadrantes CSD/Persona -->
-        <div class="right-column">
-            
-            <!-- Q1: DEMOGRÁFICOS -->
-            <div class="quadrant">
-                <div class="quadrant-header">Q1 - Demográficos</div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;Cargo, onde trabalha e com o quê&gt;</div>
-                    <div class="field-content">Analista de Marketing num escritório corporativo no centro da cidade.</div>
-                </div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;Idade, nível de experiência&gt;</div>
-                    <div class="field-content">34 anos | Utilizadora habitual de tecnologias e aplicações móveis.</div>
-                </div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;Escolaridade, Conhecimento&gt;</div>
-                    <div class="field-content">Ensino Superior Completo | Alto domínio de smartphones e apps do dia a dia.</div>
-                </div>
-            </div>
 
-            <!-- Q2: NECESSIDADES E OBJETIVOS -->
-            <div class="quadrant">
-                <div class="quadrant-header">Q2 - Necessidades e Objetivos</div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;O que ele / ela quer alcançar?&gt;</div>
-                    <div class="field-content">Retirar o filho da escola de forma ágil ao final do turno sem perder tempo em filas.</div>
-                </div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;O que ele / ela precisa para realizar seu objetivo?&gt;</div>
-                    <div class="field-content">Um método prático para comprovar a sua autorização de saída, mesmo que a rede móvel falhe no local.</div>
-                </div>
-            </div>
+* **<Quais / dificuldades ela ele enfrentar?\ pode>:** Falta de bateria ou oscilação de sinal de internet no exato momento da retirada.
 
-            <!-- Q3: COMPORTAMENTOS E PREFERÊNCIAS -->
-            <div class="quadrant">
-                <div class="quadrant-header">Q3 - Comportamentos e Preferências</div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;O que ele / ela gosta?&gt;</div>
-                    <div class="field-content">De soluções digitais rápidas, notificações instantâneas e processos organizados.</div>
-                </div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;O que ele / ela faz de melhor?&gt;</div>
-                    <div class="field-content">Organizar a rotina diária através do telemóvel e gerir o tempo com eficiência.</div>
-                </div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;Como ele / ela gosta de fazer isso?&gt;</div>
-                    <div class="field-content">Apresentando um QR Code gravado no smartphone à portaria da escola.</div>
-                </div>
-            </div>
 
-            <!-- Q4: DIFICULDADES -->
-            <div class="quadrant">
-                <div class="quadrant-header">Q4 - Dificuldades</div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;Quais são suas dificuldades?&gt;</div>
-                    <div class="field-content">Filas longas de carros/pedestres e processos manuais de identificação com listas em papel.</div>
-                </div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;Quais dificuldades ele / ela pode enfrentar?&gt;</div>
-                    <div class="field-content">Instabilidade de sinal de internet no momento da saída da escola.</div>
-                </div>
-                
-                <div class="field-group">
-                    <div class="field-label">&lt;O que o / a frustra?&gt;</div>
-                    <div class="field-content">Atrasos na saída, falta de confirmação de que o filho foi entregue em segurança e burocracia excessiva.</div>
-                </div>
-            </div>
+* **<O / a frustra?\ o que>:** Demora na saída das crianças, incerteza sobre a segurança da liberação do filho e burocracia desnecessária.
 
-        </div>
+---
 
-    </div>
+### **Persona 2: Direção Escolar / Gestão Administrativa**
 
-</body>
-</html>
+#### **Cartão Lateral**
+
+* **Nome:** Roberto Mendes
+* **Frase:** *"Minha prioridade é garantir a segurança total dos alunos na saída e manter um histórico confiável de todas as retiradas para auditabilidade da escola."*
+
+#### **Q1 - DEMOGRÁFICOS**
+
+* **<Cargo, com e o onde quê\ trabalha>:** Diretor Geral numa instituição de ensino fundamental privada.
+* **<Idade, de experiência\ nível>:** 48 anos | Mais de 20 anos de experiência na área de gestão educacional.
+* **<Escolaridade, Conhecimento>:** Pós-graduação em Gestão Escolar | Conhecimento prático do pacote de escritório e sistemas de gestão acadêmica.
+
+#### **Q2 - NECESSIDADES E OBJETIVOS**
+
+* **<O / alcançar?\ ela ele que quer>:** Mitigar riscos de segurança na entrega dos alunos, eliminar o uso de papéis na portaria e modernizar a imagem da escola frente aos pais.
+
+
+* **<O / ela ele objetivo?\ para precisa que realizar seu>:** Uma plataforma administrativa para aprovação de cadastros, gestão de vínculos entre alunos/responsáveis e consulta imediata a históricos de saídas.
+
+
+
+#### **Q3 - COMPORTAMENTOS E PREFERÊNCIAS**
+
+* **<O / ela ele gosta?\ que>:** De dados organizados em tempo real, relatórios auditáveis e processos de validação documental rigorosos.
+
+
+* **<O / de ela ele faz melhor?\ que>:** Tomar decisões estratégicas, gerir a equipe escolar e zelar pelo cumprimento da legislação (como a LGPD).
+
+
+* **<Como / de ela ele fazer gosta isso?>:** Acessando um painel web simplificado para validar novos cadastros de responsáveis e acompanhar dados operacionais.
+
+
+
+#### **Q4 - DIFICULDADES**
+
+* **<Quais dificuldades?\ suas são>:** Lidar com reclamações de pais sobre filas na saída e gerir autorizações pontuais de terceiros sem comprometer a segurança.
+
+
+* **<Quais / dificuldades ela ele enfrentar?\ pode>:** Treinar e acostumar a equipe operacional com novos processos digitais e validar documentos enviados pelos pais dentro do prazo.
+
+
+* **<O / a frustra?\ o que>:** Erros humanos na identificação de responsáveis, vulnerabilidades na segurança da portaria e falta de registro de saídas antigas.
+
+
+
+---
+
+### **Persona 3: Funcionário de Segurança / Controle de Portaria**
+
+#### **Cartão Lateral**
+
+* **Nome:** Carlos Eduardo (Kadú)
+* **Frase:** *"Preciso de uma ferramenta rápida e infalível para validar se quem está buscando a criança realmente tem autorização, sem travar o portão."*
+
+#### **Q1 - DEMOGRÁFICOS**
+
+* **<Cargo, com e o onde quê\ trabalha>:** Agente de Portaria e Segurança Escolar na entrada/saída de alunos.
+
+
+* **<Idade, de experiência\ nível>:** 41 anos | 8 anos trabalhando no controle de acesso de instituições de ensino.
+* **<Escolaridade, Conhecimento>:** Ensino Médio Completo | Uso básico/intermediário de smartphones e aplicativos operacionais.
+
+#### **Q2 - NECESSIDADES E OBJETIVOS**
+
+* **<O / alcançar?\ ela ele que quer>:** Validar a autorização de saída dos alunos de forma quase instantânea (em poucos segundos).
+
+
+* **<O / ela ele objetivo?\ para precisa que realizar seu>:** Um dispositivo móvel com câmera (tablet ou celular) com leitor de QR Code integrado e fácil visualização dos dados e foto do aluno/responsável.
+
+
+
+#### **Q3 - COMPORTAMENTOS E PREFERÊNCIAS**
+
+* **<O / ela ele gosta?\ que>:** De ferramentas simples de usar, com botões claros e leitura rápida que evitem discussões no portão.
+* **<O / de ela ele faz melhor?\ que>:** Agilizar o fluxo físico de pessoas na portaria mantendo a atenção aos detalhes e à segurança.
+* **<Como / de ela ele fazer gosta isso?>:** Apontando a câmera do tablet/celular para o QR Code do responsável e recebendo a confirmação visual na tela em até 3 segundos.
+
+
+
+#### **Q4 - DIFICULDADES**
+
+* **<Quais dificuldades?\ suas são>:** Identificar rostos apenas de memória em dias de grande movimento ou conferir nomes em listas impressas longas em dias de chuva/sol forte.
+
+
+* **<Quais / dificuldades ela ele enfrentar?\ pode>:** Tentar ler telas de celulares de responsáveis com brilho muito baixo, telas quebradas ou lidar com pais sem QR Code no momento da saída.
+
+
+* **<O / a frustra?\ o que>:** Pressão dos pais devido a atrasos nas filas, sistemas lentos ou complexos demais para operar no meio da movimentação do portão.
