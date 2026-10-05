@@ -1,3 +1,7 @@
+### LINK CANVA: https://canva.link/7o4r62ad3muamt4
+ 
+ ---
+ 
  3 perfis principais do projeto **QRStudy**: **Responsável (Pai/Mãe)**, **Membro da Direção Escolar** e **Funcionário da Segurança/Portaria**.
 
 ---
@@ -6,7 +10,7 @@
 
 #### **Cartão Lateral**
 
-* **Nome:** Mariana Silva
+* **Nome:** Marina Helena
 * **Frase:** *"Preciso de um processo de saída rápido e seguro para o meu filho na escola, sem ter de ficar parada longos minutos em filas na portaria."*
 
 #### **Q1 - DEMOGRÁFICOS**
