@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona - QRStudy</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Contentor em proporção Slide (16:9) */
+        .slide-container {
+            width: 1200px;
+            height: 675px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            padding: 25px;
+            display: flex;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Coluna Esquerda: Foto e Perfil */
+        .left-column {
+            width: 28%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .avatar-card {
+            width: 100%;
+            height: 260px;
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #ddd;
+        }
+
+        .avatar-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .name-card {
+            background-color: #3b28cc;
+            color: white;
+            padding: 20px 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .name-card h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .quote-card {
+            background-color: #f8f9fa;
+            border-left: 4px solid #3b28cc;
+            padding: 15px;
+            border-radius: 6px;
+            font-style: italic;
+            color: #555;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Coluna Direita: Grelha 2x2 dos Quadrantes */
+        .right-column {
+            width: 72%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .quadrant {
+            background-color: #f4f5f7;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e1e4e8;
+        }
+
+        .quadrant-header {
+            background-color: #a3e635;
+            color: #1a3a00;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .field-group {
+            margin-bottom: 10px;
+        }
+
+        .field-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .field-label {
+            font-size: 0.8rem;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .field-content {
+            font-size: 0.9rem;
+            color: #222;
+            line-height: 1.35;
+        }
+
+        .field-content ul {
+            list-style-position: inside;
+            padding-left: 5px;
+        }
+
+        .field-content li {
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slide-container">
+        
+        <!-- Coluna da Esquerda (Identificação da Persona) -->
+        <div class="left-column">
+            <div class="avatar-card">
+                <!-- Imagem de Perfil -->
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=600" alt="Foto do Responsável">
+            </div>
+            
+            <div class="name-card">
+                <h2>Mariana Silva</h2>
+            </div>
+            
+            <div class="quote-card">
+                "<span id="quote">Preciso de um processo de saída rápido e seguro para o meu filho na escola, sem ter de ficar parada longos minutos em filas na portaria.</span>"
+            </div>
+        </div>
+
+        <!-- Grelha dos 4 Quadrantes CSD/Persona -->
+        <div class="right-column">
+            
+            <!-- Q1: DEMOGRÁFICOS -->
+            <div class="quadrant">
+                <div class="quadrant-header">Q1 - Demográficos</div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;Cargo, onde trabalha e com o quê&gt;</div>
+                    <div class="field-content">Analista de Marketing num escritório corporativo no centro da cidade.</div>
+                </div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;Idade, nível de experiência&gt;</div>
+                    <div class="field-content">34 anos | Utilizadora habitual de tecnologias e aplicações móveis.</div>
+                </div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;Escolaridade, Conhecimento&gt;</div>
+                    <div class="field-content">Ensino Superior Completo | Alto domínio de smartphones e apps do dia a dia.</div>
+                </div>
+            </div>
+
+            <!-- Q2: NECESSIDADES E OBJETIVOS -->
+            <div class="quadrant">
+                <div class="quadrant-header">Q2 - Necessidades e Objetivos</div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;O que ele / ela quer alcançar?&gt;</div>
+                    <div class="field-content">Retirar o filho da escola de forma ágil ao final do turno sem perder tempo em filas.</div>
+                </div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;O que ele / ela precisa para realizar seu objetivo?&gt;</div>
+                    <div class="field-content">Um método prático para comprovar a sua autorização de saída, mesmo que a rede móvel falhe no local.</div>
+                </div>
+            </div>
+
+            <!-- Q3: COMPORTAMENTOS E PREFERÊNCIAS -->
+            <div class="quadrant">
+                <div class="quadrant-header">Q3 - Comportamentos e Preferências</div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;O que ele / ela gosta?&gt;</div>
+                    <div class="field-content">De soluções digitais rápidas, notificações instantâneas e processos organizados.</div>
+                </div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;O que ele / ela faz de melhor?&gt;</div>
+                    <div class="field-content">Organizar a rotina diária através do telemóvel e gerir o tempo com eficiência.</div>
+                </div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;Como ele / ela gosta de fazer isso?&gt;</div>
+                    <div class="field-content">Apresentando um QR Code gravado no smartphone à portaria da escola.</div>
+                </div>
+            </div>
+
+            <!-- Q4: DIFICULDADES -->
+            <div class="quadrant">
+                <div class="quadrant-header">Q4 - Dificuldades</div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;Quais são suas dificuldades?&gt;</div>
+                    <div class="field-content">Filas longas de carros/pedestres e processos manuais de identificação com listas em papel.</div>
+                </div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;Quais dificuldades ele / ela pode enfrentar?&gt;</div>
+                    <div class="field-content">Instabilidade de sinal de internet no momento da saída da escola.</div>
+                </div>
+                
+                <div class="field-group">
+                    <div class="field-label">&lt;O que o / a frustra?&gt;</div>
+                    <div class="field-content">Atrasos na saída, falta de confirmação de que o filho foi entregue em segurança e burocracia excessiva.</div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
