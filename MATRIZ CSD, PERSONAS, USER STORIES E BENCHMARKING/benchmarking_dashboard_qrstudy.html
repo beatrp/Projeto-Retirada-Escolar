@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benchmarking Dashboard - Projeto QRStudy</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                        },
+                        emeraldCustom: {
+                            500: '#10b981',
+                            600: '#059669',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white !important; color: black !important; }
+            .print-break { page-break-before: always; }
+            .shadow-xl, .shadow-md, .shadow-lg { box-shadow: none !important; }
+            .border { border-color: #e5e7eb !important; }
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- TOP HEADER / NAVBAR -->
+    <header class="bg-indigo-900 text-white shadow-lg sticky top-0 z-50 border-b border-indigo-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="p-2.5 bg-indigo-600 rounded-xl shadow-md flex items-center justify-center">
+                    <i class="fa-solid fa-qrcode text-2xl text-white"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-xl font-bold tracking-tight">QRStudy</h1>
+                        <span class="bg-indigo-500/30 text-indigo-200 border border-indigo-400/30 text-xs px-2.5 py-0.5 rounded-full font-medium">Benchmarking & Análise</span>
+                    </div>
+                    <p class="text-xs text-indigo-200 font-light">Sistema de Retirada Escolar Inteligente por QR Code</p>
+                </div>
+            </div>
+
+            <!-- Header Quick Actions -->
+            <div class="flex items-center gap-3 no-print">
+                <button onclick="downloadCSV()" class="inline-flex items-center gap-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white px-3.5 py-2 rounded-lg text-sm font-medium transition border border-slate-700 shadow-sm">
+                    <i class="fa-solid fa-file-csv text-emerald-400"></i> Baixar CSV
+                </button>
+                <button onclick="window.print()" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-3.5 py-2 rounded-lg text-sm font-medium transition shadow-md">
+                    <i class="fa-solid fa-print"></i> Imprimir Relatório
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+        <!-- PROJECT INFO BANNER / STATS -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Academic Info -->
+                <div class="space-y-1">
+                    <span class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Instituição & Projeto</span>
+                    <h3 class="text-lg font-bold text-slate-900">FATEC - 2026/2</h3>
+                    <p class="text-sm text-slate-600 flex items-center gap-1.5">
+                        <i class="fa-solid fa-users text-indigo-500"></i>
+                        <span>Beatriz Rogich, Marcelle Góes, Mavelyn Almeida</span>
+                    </p>
+                </div>
+
+                <!-- Budget Info -->
+                <div class="space-y-1 border-t md:border-t-0 md:border-l border-slate-100 md:pl-6 pt-4 md:pt-0">
+                    <span class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Orçamento Previsto</span>
+                    <h3 class="text-lg font-bold text-slate-900">R$ 215.000,00 <span class="text-xs font-normal text-slate-500">(Total)</span></h3>
+                    <p class="text-xs text-slate-600">
+                        Dev: <strong class="text-slate-800">R$ 200k</strong> | Implantação: <strong class="text-slate-800">R$ 15k</strong>
+                    </p>
+                </div>
+
+                <!-- Timeline / Deadline -->
+                <div class="space-y-1 border-t lg:border-t-0 lg:border-l border-slate-100 lg:pl-6 pt-4 lg:pt-0">
+                    <span class="text-xs font-semibold text-purple-600 uppercase tracking-wider">Prazos de Execução</span>
+                    <h3 class="text-lg font-bold text-slate-900">Maio / Julho 2027</h3>
+                    <p class="text-xs text-slate-600">
+                        Dev: 12/05/2027 | Implantação Final: 12/07/2027
+                    </p>
+                </div>
+
+                <!-- Market Positioning Summary -->
+                <div class="space-y-1 border-t lg:border-t-0 lg:border-l border-slate-100 lg:pl-6 pt-4 lg:pt-0">
+                    <span class="text-xs font-semibold text-blue-600 uppercase tracking-wider">Foco Diferencial</span>
+                    <h3 class="text-lg font-bold text-slate-900">Segurança Offline & LGPD</h3>
+                    <p class="text-xs text-slate-600">
+                        Validação local JWT na portaria + QR Code temporário para terceiros.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- MARKET COMPARISON OVERVIEW & RADAR CHART -->
+        <section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Competitors Cards Overview -->
+            <div class="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-4">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-3">
+                    <div>
+                        <h2 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-indigo-600"></i>
+                            Mapeamento dos Players Analisados
+                        </h2>
+                        <p class="text-xs text-slate-500">Soluções nacionais e internacionais de controle de saída escolar</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    <!-- QRStudy Card -->
+                    <div class="p-4 rounded-xl border-2 border-indigo-500/40 bg-indigo-50/40 space-y-2 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-bl-lg uppercase">Seu Projeto</div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved text-indigo-600 text-lg"></i>
+                            <h4 class="font-bold text-indigo-950">QRStudy</h4>
+                        </div>
+                        <p class="text-xs text-slate-600">Focado em máxima segurança, resiliência a falhas de internet e conformidade rigorosa com a LGPD em institutos de ensino.</p>
+                    </div>
+
+                    <!-- Filho Sem Fila -->
+                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-slate-800">Filho Sem Fila</h4>
+                            <span class="text-[11px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded">Nacional</span>
+                        </div>
+                        <p class="text-xs text-slate-600">Foco em logística de trânsito em frente à escola via Geofencing (GPS) para chamar os alunos nas salas.</p>
+                    </div>
+
+                    <!-- ClipEscola -->
+                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-slate-800">ClipEscola</h4>
+                            <span class="text-[11px] bg-slate-200 text-slate-700 px-2 py-0.5 rounded">Nacional</span>
+                        </div>
+                        <p class="text-xs text-slate-600">Plataforma ERP e Agenda Escolar completa com módulo adicional de saída de alunos por aproximação.</p>
+                    </div>
+
+                    <!-- Pikmykid -->
+                    <div class="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <h4 class="font-bold text-slate-800">Pikmykid</h4>
+                            <span class="text-[11px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Internacional (EUA)</span>
+                        </div>
+                        <p class="text-xs text-slate-600">Líder global nos EUA focado em segurança de portaria, emergências e gestão de rotas de ônibus/caronas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chart Box -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 flex flex-col justify-between">
+                <div>
+                    <h2 class="text-base font-bold text-slate-900 flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-radar text-indigo-600"></i>
+                        Aderência Funcional
+                    </h2>
+                    <p class="text-xs text-slate-500 mb-4">Comparativo de forças em áreas chave</p>
+                </div>
+                <div class="relative flex-grow flex items-center justify-center min-h-[220px]">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTERACTIVE COMPARISON TABLE SECTION -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden space-y-4 p-6">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-table-list text-indigo-600"></i>
+                        Matriz Comparativa de Recursos
+                    </h2>
+                    <p class="text-xs text-slate-500">Filtre as funcionalidades por categoria e compare a robustez do QRStudy</p>
+                </div>
+
+                <!-- Category Filter Buttons -->
+                <div class="flex flex-wrap gap-2 no-print" id="categoryFilters">
+                    <button onclick="filterCategory('all')" class="filter-btn active text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-600 text-white transition">
+                        Todos
+                    </button>
+                    <button onclick="filterCategory('seguranca')" class="filter-btn text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                        Segurança & LGPD
+                    </button>
+                    <button onclick="filterCategory('funcionalidades')" class="filter-btn text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                        Funcionalidades
+                    </button>
+                    <button onclick="filterCategory('infra')" class="filter-btn text-xs font-semibold px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+                        Infraestrutura & Modelo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table Container -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200 text-slate-700">
+                            <th class="p-3.5 font-bold">Recurso / Critério</th>
+                            <th class="p-3.5 font-bold bg-indigo-50/80 text-indigo-950 border-x border-indigo-100 min-w-[180px]">
+                                <div class="flex items-center gap-1.5">
+                                    <i class="fa-solid fa-qrcode text-indigo-600"></i>
+                                    <span>QRStudy</span>
+                                </div>
+                            </th>
+                            <th class="p-3.5 font-bold text-slate-800 min-w-[150px]">Filho Sem Fila</th>
+                            <th class="p-3.5 font-bold text-slate-800 min-w-[150px]">ClipEscola</th>
+                            <th class="p-3.5 font-bold text-slate-800 min-w-[150px]">Pikmykid</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200" id="comparisonTableBody">
+                        <!-- Items rendered via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- EXCLUSIVE DIFFERENTIALS & KEY INNOVATIONS -->
+        <section class="space-y-4">
+            <div class="border-b border-slate-200 pb-2">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-star text-amber-500"></i>
+                    Diferenciais Competitivos Exclusivos do QRStudy
+                </h2>
+                <p class="text-xs text-slate-500">Pilares tecnológicos de destaque definidos nos Requisitos do Projeto</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Differential 1 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between space-y-3 hover:border-indigo-300 transition">
+                    <div class="space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-wifi"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base">Validação Offline Nativa (JWT)</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Autenticidade garantida na portaria por assinatura criptográfica embutida no QR Code, permitindo liberar alunos mesmo sem conexão com a internet (RNFR-08.4).
+                        </p>
+                    </div>
+                    <span class="inline-flex text-[11px] font-semibold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-md w-fit">Resiliência Operacional</span>
+                </div>
+
+                <!-- Differential 2 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between space-y-3 hover:border-indigo-300 transition">
+                    <div class="space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-user-clock"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base">Retirada Emergencial por Terceiros</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Emissão de QR Code temporário restrito (ex: 4h) para terceiros pontuais, com registro de log completo do responsável delegante (RF-15 / RNFR-15.1).
+                        </p>
+                    </div>
+                    <span class="inline-flex text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md w-fit">Flexibilidade Segura</span>
+                </div>
+
+                <!-- Differential 3 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between space-y-3 hover:border-indigo-300 transition">
+                    <div class="space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-user-lock"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base">Controle de Acesso Estrito (RBAC)</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Portaria enxerga apenas retiradas do dia; responsáveis veem apenas seus filhos; gestores têm acesso completo. Minimização real de exposição (RF-10 / RNFR-10.1).
+                        </p>
+                    </div>
+                    <span class="inline-flex text-[11px] font-semibold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-md w-fit">Privacidade por Design</span>
+                </div>
+
+                <!-- Differential 4 -->
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between space-y-3 hover:border-indigo-300 transition">
+                    <div class="space-y-2">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-box-archive"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-base">Retenção de Dados de 5 Anos</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">
+                            Histórico mantido para auditoria jurídica e escolar com rotinas automáticas de anonimização e expiração conforme LGPD (RNFR-09.4 / RNFS-05).
+                        </p>
+                    </div>
+                    <span class="inline-flex text-[11px] font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md w-fit">Conformidade Legal</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SWOT / FOFA MATRIX -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-6">
+            <div class="border-b border-slate-100 pb-3">
+                <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-border-all text-indigo-600"></i>
+                    Análise SWOT / FOFA (QRStudy frente ao Mercado)
+                </h2>
+                <p class="text-xs text-slate-500">Avaliação estratégica de Forças, Oportunidades, Fraquezas e Ameaças</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- STRENGTHS -->
+                <div class="p-5 rounded-xl bg-emerald-50/50 border border-emerald-200/80 space-y-3">
+                    <div class="flex items-center gap-2 text-emerald-800 font-bold">
+                        <i class="fa-solid fa-shield-cat text-lg"></i>
+                        <h3>Forças (Strengths)</h3>
+                    </div>
+                    <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside">
+                        <li><strong>Validação Offline Autônoma:</strong> Não paralisa a portaria caso a internet da escola falhe.</li>
+                        <li><strong>Custo Sob Medida:</strong> Investimento de R$ 200k em dev com código próprio da instituição sem dependência de SaaS de terceiros.</li>
+                        <li><strong>Específico para Retirada:</strong> Interface simples e direta sem a poluição de funcionalidades não utilizadas de ERPs escolares.</li>
+                        <li><strong>Segurança JWT & Hashing:</strong> Documentos armazenados com hash de verificação e dados criptografados.</li>
+                    </ul>
+                </div>
+
+                <!-- OPPORTUNITIES -->
+                <div class="p-5 rounded-xl bg-blue-50/50 border border-blue-200/80 space-y-3">
+                    <div class="flex items-center gap-2 text-blue-800 font-bold">
+                        <i class="fa-solid fa-lightbulb text-lg"></i>
+                        <h3>Oportunidades (Opportunities)</h3>
+                    </div>
+                    <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside">
+                        <li><strong>Adoção em Escolas Públicas / Municipais:</strong> Alto apelo devido ao custo acessível e foco em segurança extrema.</li>
+                        <li><strong>Expansão de Módulos (V2):</strong> Integração futura com catracas eletrônicas e sistemas de transporte escolar.</li>
+                        <li><strong>Notificações Push Instantâneas:</strong> Envio de alertas de confirmação para os pais no momento exato do scan.</li>
+                        <li><strong>Parcerias com Redes de Ensino:</strong> Venda do produto como licença dedicada para grupos educacionais.</li>
+                    </ul>
+                </div>
+
+                <!-- WEAKNESSES -->
+                <div class="p-5 rounded-xl bg-amber-50/50 border border-amber-200/80 space-y-3">
+                    <div class="flex items-center gap-2 text-amber-800 font-bold">
+                        <i class="fa-solid fa-triangle-exclamation text-lg"></i>
+                        <h3>Fraquezas (Weaknesses)</h3>
+                    </div>
+                    <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside">
+                        <li><strong>Ausência Inicial de Geofencing:</strong> O sistema não avisa antecipadamente quando o carro do pai está se aproximando.</li>
+                        <li><strong>Solução Não-Monolítica de Gestão:</strong> Não substitui a gestão de notas ou boletim escolar (foco 100% em portaria/saída).</li>
+                        <li><strong>Adoção Tecnológica Inicial:</strong> Necessidade de letramento digital mínimo da equipe de portaria e dos pais.</li>
+                    </ul>
+                </div>
+
+                <!-- THREATS -->
+                <div class="p-5 rounded-xl bg-rose-50/50 border border-rose-200/80 space-y-3">
+                    <div class="flex items-center gap-2 text-rose-800 font-bold">
+                        <i class="fa-solid fa-skull-crossbones text-lg"></i>
+                        <h3>Ameaças (Threats)</h3>
+                    </div>
+                    <ul class="text-xs text-slate-700 space-y-2 list-disc list-inside">
+                        <li><strong>Concorrentes Consolidados em SaaS:</strong> Plataformas como ClipEscola oferecem pacotes tudo-em-um integrados.</li>
+                        <li><strong>Resistência à Mudança na Portaria:</strong> Funcionários acostumados com processos manuais impressos.</li>
+                        <li><strong>Furtos ou Perda de SmartPhones:</strong> Risco de responsáveis ficarem sem bateria ou sem dispositivo na saída.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- EVOLUTION ROADMAP / FUTURE SCOPE -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-6">
+            <div class="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-map-location-dot text-indigo-600"></i>
+                        Roteiro de Evolução Futura (Roadmap Pós-V1)
+                    </h2>
+                    <p class="text-xs text-slate-500">Inovações mapeadas para expansão do escopo inicial do QRStudy</p>
+                </div>
+                <span class="text-xs font-semibold bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full w-fit">Escopo Futuro</span>
+            </div>
+
+            <div class="relative border-l-2 border-indigo-200 ml-4 space-y-8 pl-6 py-2">
+                <!-- Milestone 1 -->
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-indigo-600 ring-4 ring-indigo-100"></span>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-slate-900 text-base">Fase 1: Notificações Push & Alertas em Tempo Real</h3>
+                            <span class="text-[10px] font-semibold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">Em Planejamento</span>
+                        </div>
+                        <p class="text-xs text-slate-600">
+                            Envio de confirmação imediata para o smartphone dos pais no momento exato em que o QR Code do aluno for lido na portaria, adicionando tranquilidade aos responsáveis.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Milestone 2 -->
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-slate-300 ring-4 ring-slate-100"></span>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-slate-900 text-base">Fase 2: Chamada Antecipada por Geofencing (GPS)</h3>
+                            <span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">Futuro</span>
+                        </div>
+                        <p class="text-xs text-slate-600">
+                            Detecção do veículo do responsável a 300 metros da escola via GPS, preparando o aluno no painel da sala de aula para reduzir ainda mais o tempo de fila na calçada.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Milestone 3 -->
+                <div class="relative">
+                    <span class="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-slate-300 ring-4 ring-slate-100"></span>
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-slate-900 text-base">Fase 3: Reconhecimento Facial para Contingência</h3>
+                            <span class="text-[10px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded">Futuro</span>
+                        </div>
+                        <p class="text-xs text-slate-600">
+                            Identificação biométrica facial rápida na portaria para responsáveis cadastrados que estejam sem o smartphone ou com bateria descarregada.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-900 text-slate-400 text-xs py-6 border-t border-slate-800 mt-12 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div>
+                <p class="font-semibold text-slate-200">Projeto QRStudy - Documentação de Sistema FATEC 2026/2</p>
+                <p class="text-slate-500">Desenvolvido para apoio ao planejamento e validação técnica de requisitos.</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <span>Versão do Relatório: 1.0</span>
+                <span>•</span>
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-indigo-400 hover:text-indigo-300 transition">
+                    Voltar ao topo <i class="fa-solid fa-arrow-up ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // DATA SET FOR COMPARISON
+        const comparisonData = [
+            {
+                category: 'funcionalidades',
+                name: 'Geração de QR Code Dinâmico (24h de Validade)',
+                qrstudy: 'Sim (Validade 24h, Uso Único)',
+                filhoSemFila: 'Parcial (Código Fixo ou Tag)',
+                clipEscola: 'Sim (Via App)',
+                pikmykid: 'Sim (Via App)'
+            },
+            {
+                category: 'seguranca',
+                name: 'Validação Offline na Portaria (Sem Internet local)',
+                qrstudy: 'Sim (Assinatura Criptográfica JWT)',
+                filhoSemFila: 'Não (Requer Conexão Ativa)',
+                clipEscola: 'Não (Requer Conexão Ativa)',
+                pikmykid: 'Parcial (Depende de Sync Prévio)'
+            },
+            {
+                category: 'funcionalidades',
+                name: 'Autorização Emergencial para Terceiros',
+                qrstudy: 'Sim (QR Code Temporário de até 4h)',
+                filhoSemFila: 'Sim (Cadastro Prévio do Condutor)',
+                clipEscola: 'Sim (Aviso no App)',
+                pikmykid: 'Sim (Mudança de Rotina no App)'
+            },
+            {
+                category: 'seguranca',
+                name: 'Controle de Acesso Restrito por Perfil (RBAC)',
+                qrstudy: 'Sim (Portaria vê apenas saídas do dia)',
+                filhoSemFila: 'Sim',
+                clipEscola: 'Sim',
+                pikmykid: 'Sim'
+            },
+            {
+                category: 'seguranca',
+                name: 'Armazenamento Criptografado & Hash de Documentos',
+                qrstudy: 'Sim (Hash para verificação rápida)',
+                filhoSemFila: 'Sim (Padrão de Mercado)',
+                clipEscola: 'Sim (Padrão de Mercado)',
+                pikmykid: 'Sim (FERPA / COPPA)'
+            },
+            {
+                category: 'seguranca',
+                name: 'Retenção de Histórico e Conformidade LGPD',
+                qrstudy: 'Sim (Histórico de 5 anos + Anonimização)',
+                filhoSemFila: 'Sim (Conforme LGPD)',
+                clipEscola: 'Sim (Conforme LGPD)',
+                pikmykid: 'Sim (FERPA / COPPA / LGPD)'
+            },
+            {
+                category: 'infra',
+                name: 'Arquitetura do Sistema',
+                qrstudy: 'Híbrida (Web + App Mobile React Native)',
+                filhoSemFila: 'App Mobile + Painel Web',
+                clipEscola: 'App Mobile SuperApp + Web',
+                pikmykid: 'App Mobile + Cloud Platform'
+            },
+            {
+                category: 'funcionalidades',
+                name: 'Geofencing / Aproximação GPS do Veículo',
+                qrstudy: 'Roadmap (Escopo Futuro)',
+                filhoSemFila: 'Sim (Diferencial Principal)',
+                clipEscola: 'Sim (Módulo de Saída)',
+                pikmykid: 'Sim'
+            },
+            {
+                category: 'infra',
+                name: 'Modelo de Custo / Investimento',
+                qrstudy: 'Projeto Próprio (R$ 200k Dev + R$ 15k Imp)',
+                filhoSemFila: 'Assinatura SaaS Mensal',
+                clipEscola: 'Assinatura SaaS Mensal',
+                pikmykid: 'Anuidade por Escola (USD)'
+            }
+        ];
+
+        // RENDER TABLE FUNCTION
+        function renderTable(data) {
+            const tbody = document.getElementById('comparisonTableBody');
+            tbody.innerHTML = '';
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50/80 transition border-b border-slate-100 text-xs sm:text-sm";
+                
+                // Formatação visual diferenciada para o QRStudy
+                tr.innerHTML = `
+                    <td class="p-3.5 font-medium text-slate-800">${item.name}</td>
+                    <td class="p-3.5 bg-indigo-50/50 border-x border-indigo-100/70 font-bold text-indigo-950 flex items-center gap-1.5">
+                        ${getCheckIcon(item.qrstudy)}
+                        <span>${item.qrstudy}</span>
+                    </td>
+                    <td class="p-3.5 text-slate-600">${item.filhoSemFila}</td>
+                    <td class="p-3.5 text-slate-600">${item.clipEscola}</td>
+                    <td class="p-3.5 text-slate-600">${item.pikmykid}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ICON HELPER FOR TABLE
+        function getCheckIcon(text) {
+            if (text.startsWith('Sim')) {
+                return '<i class="fa-solid fa-circle-check text-emerald-500 text-base"></i>';
+            } else if (text.startsWith('Roadmap') || text.startsWith('Parcial')) {
+                return '<i class="fa-solid fa-clock text-amber-500 text-base"></i>';
+            } else if (text.startsWith('Não')) {
+                return '<i class="fa-solid fa-circle-xmark text-rose-400 text-base"></i>';
+            }
+            return '<i class="fa-solid fa-cubes text-indigo-500 text-base"></i>';
+        }
+
+        // FILTER CATEGORY LOGIC
+        function filterCategory(cat) {
+            // Update Active Class on Buttons
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-indigo-600', 'text-white', 'active');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            });
+
+            event.target.classList.remove('bg-slate-100', 'text-slate-700');
+            event.target.classList.add('bg-indigo-600', 'text-white', 'active');
+
+            if (cat === 'all') {
+                renderTable(comparisonData);
+            } else {
+                const filtered = comparisonData.filter(item => item.category === cat);
+                renderTable(filtered);
+            }
+        }
+
+        // EXPORT TO CSV
+        function downloadCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Recurso / Criterio,QRStudy,Filho Sem Fila,ClipEscola,Pikmykid\n";
+
+            comparisonData.forEach(row => {
+                let name = `"${row.name.replace(/"/g, '""')}"`;
+                let qrs = `"${row.qrstudy.replace(/"/g, '""')}"`;
+                let fsf = `"${row.filhoSemFila.replace(/"/g, '""')}"`;
+                let clip = `"${row.clipEscola.replace(/"/g, '""')}"`;
+                let pik = `"${row.pikmykid.replace(/"/g, '""')}"`;
+                csvContent += `${name},${qrs},${fsf},${clip},${pik}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "benchmarking_qrstudy_fatec.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // INITIALIZE CHART & TABLE ON LOAD
+        window.onload = function() {
+            renderTable(comparisonData);
+
+            // RADAR CHART INITIALIZATION
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'Segurança Offline',
+                        'Conformidade LGPD',
+                        'Gestão de Emergências',
+                        'Facilidade/Foco',
+                        'Logística de Trânsito',
+                        'Custo de Propriedade'
+                    ],
+                    datasets: [
+                        {
+                            label: 'QRStudy',
+                            data: [100, 95, 90, 95, 60, 90],
+                            fill: true,
+                            backgroundColor: 'rgba(99, 102, 241, 0.25)',
+                            borderColor: '#6366f1',
+                            pointBackgroundColor: '#4f46e5',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: '#4f46e5'
+                        },
+                        {
+                            label: 'Filho Sem Fila',
+                            data: [40, 85, 75, 80, 95, 70],
+                            fill: true,
+                            backgroundColor: 'rgba(148, 163, 184, 0.2)',
+                            borderColor: '#94a3b8',
+                            pointBackgroundColor: '#64748b',
+                            pointBorderColor: '#fff'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 11, family: 'Inter' },
+                                boxWidth: 12
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: { color: '#e2e8f0' },
+                            grid: { color: '#f1f5f9' },
+                            pointLabels: { font: { size: 10, family: 'Inter' } },
+                            ticks: { display: false, stepSize: 20 },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    }
+                }
+            });
+        };
+    </script>
+</body>
+</html>
