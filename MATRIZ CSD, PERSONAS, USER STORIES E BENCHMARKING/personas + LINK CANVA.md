@@ -2,7 +2,7 @@
  
  ---
  
- 3 perfis principais do projeto **QRStudy**: **Responsável (Pai/Mãe)**, **Membro da Direção Escolar** e **Funcionário da Segurança/Portaria**.
+ 3 perfis principais do projeto **QRStudy**: **Responsável (Pai/Mãe)**, **Membro da Direção / Gestão Administrativa** e **Funcionário da Segurança/Portaria**.
 
 ---
 
