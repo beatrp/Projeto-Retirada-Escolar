@@ -1,0 +1,40 @@
+﻿Título,Descrição,Status,Etiqueta
+"Descrição do cliente, objetivos e stakeholders",Seções iniciais do documento.,Concluído,Documentação
+Estudo de viabilidade,"Desenvolvimento ~20 meses (até 12/11/2028); implantação 2 a 3 meses (até 12/02/2029). Custo: R$ 200 mil dev + R$ 15 mil implantação, teto de R$ 300 mil.",Concluído,Documentação
+Escopo do sistema e itens fora do escopo,,Concluído,Documentação
+Levantamento de requisitos (texto das necessidades),,Concluído,Documentação
+Especificação RF-01 a RF-12 com RNFs relacionados,,Concluído,Documentação
+Requisitos não funcionais sistêmicos RNFS-01 a RNFS-15,,Concluído,Requisito não funcional
+Correções da versão anterior,"RF-10 reescrito, RNFR-07.1 preenchido e prazos ajustados para 12/11/2028 e 12/02/2029.",Concluído,Documentação
+Roteiro e perguntas da entrevista com o cliente,,A fazer,Entrevista
+Registrar ata da reunião com o cliente,"Decisões, dúvidas e requisitos novos ou alterados.",A fazer,Entrevista
+Anexar fotos da reunião ao documento,Página 23: Fotos da reunião com o cliente para levantamento dos requisitos.,A fazer,Entrevista
+Validar os requisitos com o cliente,Apresentar o documento e registrar o aceite ou os ajustes pedidos.,A fazer,Entrevista
+Levantar entidades e atributos a partir dos RFs,"Candidatas: Escola, Usuário (admin/funcionário), Responsável, Veículo, Aluno, Vínculo responsável-aluno, Documento enviado, QR Code, Retirada, Log de auditoria.",A fazer,Banco de dados
+Modelo conceitual (DER),"Entidades, atributos e relacionamentos com cardinalidades.",A fazer,Banco de dados
+Modelo lógico,"Tabelas, chaves primárias e estrangeiras, tipos de dados.",A fazer,Banco de dados
+Script do banco de dados (SQL),"CREATE TABLE, chaves e unicidade (CNPJ da escola, documento do responsável, documento do aluno). Retirada e vínculo nunca apagados, só revogados.",A fazer,Banco de dados
+Dicionário de dados,"Descrição de cada tabela e campo, com marcação de dados pessoais para a LGPD.",A fazer,Banco de dados
+Inserir diagramas e script no documento,Página 23: Diagramas do banco de dados e Script do banco de dados.,A fazer,Banco de dados
+RF-01 Cadastrar escola,CNPJ único · conta administrativa,Backlog,Requisito funcional
+RF-02 Cadastrar responsável,Dados pessoais criptografados · seleção da escola,Backlog,Requisito funcional
+RF-03 Enviar documentos para validação,"PDF, JPG ou PNG · até 20 MB",Backlog,Requisito funcional
+RF-04 Validar cadastro de responsável,Aprovar ou rejeitar · log de quem decidiu,Backlog,Requisito funcional
+RF-05 Cadastrar aluno,Sem duplicidade · só administrador,Backlog,Requisito funcional
+RF-06 Vincular responsável ao aluno,Somente responsáveis aprovados,Backlog,Requisito funcional
+RF-07 Gerar QR Code de retirada,"Validade, uso único e disponível offline",Backlog,Requisito funcional
+RF-08 Validar QR Code de retirada,Resposta em até 3 s,Backlog,Requisito funcional
+RF-09 Registrar retirada de aluno,"Data, hora, aluno e responsável",Backlog,Requisito funcional
+RF-10 Consultar histórico de retiradas,"Busca por aluno, responsável ou data · guarda de 5 anos",Backlog,Requisito funcional
+RF-11 Revogar autorização de responsável,QR Codes do vínculo viram Revogado,Backlog,Requisito funcional
+RF-12 Cadastrar funcionário da portaria,Acesso restrito à validação,Backlog,Requisito funcional
+Back-end em Node.js e API,,Backlog,Desenvolvimento
+Aplicação web em React com Tailwind CSS,,Backlog,Desenvolvimento
+Aplicativo mobile com leitura de QR Code pela câmera,Ex.: React Native.,Backlog,Desenvolvimento
+"Login, senha mínima de 8 caracteres e SSL/TLS",RNFS-03 e RNFS-09.,Backlog,Desenvolvimento
+Log de auditoria e backup diário,RNFS-04 e RNFS-07.,Backlog,Desenvolvimento
+Adequação à LGPD,RNFS-05.,Backlog,Desenvolvimento
+Testes de desempenho com 500 usuários simultâneos,RNFS-10.,Backlog,Desenvolvimento
+Configurar o sistema na escola,,Backlog,Implantação
+Treinamento básico dos funcionários,,Backlog,Implantação
+Testes no ambiente real,Implantação em 2 a 3 meses.,Backlog,Implantação
