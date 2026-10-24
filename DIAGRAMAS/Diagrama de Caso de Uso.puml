@@ -5,14 +5,44 @@ left to right direction
 skinparam shadowing false
 skinparam packageStyle rectangle
 skinparam actorStyle awesome
+
+' Estilo Global e de Casos de Uso (Cores Claras e Legíveis)
 skinparam usecase {
-  BackgroundColor #284057
-  BorderColor #334155
-  ArrowColor #475569
+    BackgroundColor #E0F2FE
+    BorderColor #0284C7
+    FontColor #0F172A
+    FontSize 13
 }
+
 skinparam rectangle {
-  BackgroundColor #FFFFFF
-  BorderColor #0F172A
+    BackgroundColor #FAFAFA
+    BorderColor #94A3B8
+    FontColor #0F172A
+}
+
+skinparam package {
+    BackgroundColor #FFFFFF
+    BorderColor #CBD5E1
+    FontColor #334155
+}
+
+skinparam actor {
+    BackgroundColor #0284C7
+    BorderColor #0369A1
+    FontColor #0F172A
+}
+
+skinparam arrow {
+    Color #475569
+    FontColor #334155
+    FontSize 11
+}
+
+skinparam note {
+    BackgroundColor #FEF3C7
+    BorderColor #F59E0B
+    FontColor #78350F
+    FontSize 11
 }
 
 ' ===== Atores =====
