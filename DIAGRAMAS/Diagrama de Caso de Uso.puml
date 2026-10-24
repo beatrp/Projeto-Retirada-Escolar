@@ -1,70 +1,111 @@
-@startuml
-skinparam actorStyle human
+@startuml QRStudy_CasosDeUso
+title QRStudy – Diagrama de Casos de Uso
+
 left to right direction
-
-' Definição e Agrupamento dos Atores
-actor "Responsável\n(Pai/Mãe/Tutor)" as Resp
-actor "Terceiro Autorizado" as Terceiro
-actor "Aluno" as Aluno
-actor "Porteiro/Funcionário" as Porteiro
-actor "Administrador" as Admin
-
-rectangle "QRSTUDY - SISTEMA DE RETIRADA ESCOLAR" {
-    
-    package "Autenticação & Acesso" {
-        usecase "Efetuar Login" as UC1
-    }
-
-    package "Gestão pelo Responsável / Terceiro" {
-        usecase "Gerar QR Code Dinâmico" as UC2
-        usecase "Cadastrar Terceiro" as UC3
-        usecase "Gerar QR Code para Terceiro" as UC4
-        usecase "Consultar Histórico" as UC5
-        usecase "Receber Notificação de Saída" as UC6
-    }
-
-    package "Operação da Portaria" {
-        usecase "Escanear QR Code" as UC8
-        usecase "Validar Autorização" as UC9
-        usecase "Bloquear Saída" as UC10
-        usecase "Confirmar Saída" as UC11
-        usecase "Notificar Responsável" as UC12
-    }
-
-    package "Administração do Sistema" {
-        usecase "Gerenciar Usuários" as UC14
-        usecase "Gerar Relatórios de Fluxo" as UC15
-        usecase "Configurar Parâmetros" as UC16
-    }
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+skinparam usecase {
+  BackgroundColor #284057
+  BorderColor #334155
+  ArrowColor #475569
+}
+skinparam rectangle {
+  BackgroundColor #FFFFFF
+  BorderColor #0F172A
 }
 
-' Relações dos Atores
-Resp --> UC1
-Resp --> UC2
-Resp --> UC3
-Resp --> UC4
-Resp --> UC5
-Resp --> UC6
+' ===== Atores =====
+actor "Responsável" as RESP
+actor "Administrador\nda Escola" as ADM
+actor "Funcionário\nda Portaria" as FUNC
 
-Terceiro --> UC1
-Terceiro --> UC2
-Terceiro --> UC3
-Terceiro --> UC4
+' ===== Sistema =====
+rectangle "QRStudy – Sistema de Retirada Escolar por QR Code" {
 
-Aluno --> UC6
+  usecase "Autenticar usuário\n(login e recuperação de senha)" as UC13
 
-Porteiro --> UC1
-Porteiro --> UC8
+  package "Gestão da escola" {
+    usecase "Cadastrar escola" as UC01
+    usecase "Cadastrar aluno" as UC05
+    usecase "Cadastrar funcionário\nda portaria" as UC12
+    usecase "Editar e inativar cadastros" as UC14
+  }
 
-Admin --> UC1
-Admin --> UC14
-Admin --> UC15
-Admin --> UC16
+  package "Cadastro e autorização de responsáveis" {
+    usecase "Cadastrar responsável" as UC02
+    usecase "Enviar documentos\npara validação" as UC03
+    usecase "Validar cadastro\nde responsável" as UC04
+    usecase "Vincular responsável\nao aluno" as UC06
+    usecase "Revogar autorização\nde responsável" as UC11
+  }
 
-' Inclusões e Extensões
-UC8 .> UC9 : <<include>>
-UC9 .> UC10 : <<extend>>
-UC9 .> UC11 : <<extend>>
-UC11 .> UC12 : <<extend>>
+  package "Retirada do aluno" {
+    usecase "Gerar QR Code\nde retirada" as UC07
+    usecase "Autorizar retirada emergencial\npor terceiro" as UC15
+    usecase "Validar QR Code\nde retirada" as UC08
+    usecase "Registrar retirada\nde aluno" as UC09
+    usecase "Consultar histórico\nde retiradas" as UC10
+  }
+}
+
+' ===== Associações: Administrador =====
+ADM --> UC01
+ADM --> UC05
+ADM --> UC12
+ADM --> UC14
+ADM --> UC04
+ADM --> UC06
+ADM --> UC11
+ADM --> UC10
+ADM --> UC15
+
+' ===== Associações: Responsável =====
+RESP --> UC02
+RESP --> UC03
+RESP --> UC07
+RESP --> UC15
+RESP --> UC10
+
+' ===== Associações: Funcionário da portaria =====
+FUNC --> UC08
+FUNC --> UC10
+
+' ===== Login (todos os perfis) =====
+RESP --> UC13
+ADM --> UC13
+FUNC --> UC13
+
+' ===== Relacionamentos entre casos de uso =====
+UC02 ..> UC03 : <<include>>
+UC15 ..> UC07 : <<include>>
+UC09 ..> UC08 : <<extend>>\n[QR Code válido]
+
+' ===== Notas =====
+note right of UC10
+  Escopo por perfil:
+  • Administrador: histórico completo
+  • Responsável: apenas alunos vinculados
+  • Funcionário: apenas retiradas do dia
+end note
+
+note bottom of UC08
+  Funciona offline: validação local por
+  assinatura criptográfica (JWT);
+  registro sincronizado ao reconectar.
+  Nega QR inválido, expirado,
+  revogado ou já utilizado.
+end note
+
+note bottom of UC15
+  Exige aprovação ou verificação
+  visual da administração na portaria.
+  QR temporário (ex.: 4 horas), uso único.
+end note
+
+note bottom of UC11
+  Revoga imediatamente todos os
+  QR Codes ativos do vínculo.
+end note
 
 @enduml
