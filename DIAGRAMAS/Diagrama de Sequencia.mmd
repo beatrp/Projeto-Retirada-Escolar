@@ -1,47 +1,83 @@
+---
+title: QRStudy – Diagrama de Sequência (Gerar QR Code, Validar e Registrar Retirada)
+---
 sequenceDiagram
     autonumber
-    actor Resp as Responsável Legal
-    actor Func as Funcionário (Portaria)
-    participant App as App Mobile / Web
-    participant Server as Servidor (Node.js)
-    participant DB as Banco de Dados
 
-    %% Fase 1: Geração do QR Code
-    rect rgb(240, 248, 255)
-        note over Resp, App: Geração do QR Code (RF-07)
-        Resp->>App: Solicita geração de QR Code de retirada
-        App->>Server: Requisita token/dados da retirada (ID Responsável + ID Aluno)
-        Server->>DB: Consulta autorização do vínculo (RF-06)
-        DB-->>Server: Retorna vínculo ativo e aprovado
-        Server-->>App: Retorna código único assinado
-        App-->>Resp: Exibe QR Code na tela (disponível offline)
-    end
+    actor R as Responsável
+    participant APP as App do Responsável
+    actor F as Funcionário da Portaria
+    participant LEI as App da Portaria
+    participant API as API QRStudy
+    participant BD as Banco de Dados
 
-    %% Fase 2: Leitura e Validação
-    rect rgb(255, 248, 240)
-        note over Func, DB: Leitura e Validação do QR Code (RF-08)
-        Resp->>Func: Apresenta o QR Code na portaria
-        Func->>App: Escaneia o QR Code usando a câmera
-        App->>Server: Envia payload do QR Code para validação
-        Server->>DB: Verifica integridade e autorização do QR Code
-        alt QR Code Válido e Autorizado
-            DB-->>Server: Confirmação de dados (Aluno, Responsável e Autorização)
-            Server-->>App: Sucesso (Exibe dados do aluno e responsável na tela)
-        else QR Code Inválido ou Não Autorizado
-            DB-->>Server: Falha / Vínculo Inválido
-            Server-->>App: Erro (Exibe mensagem de recusa)
+    %% ===================== RF-07: GERAR QR CODE =====================
+    rect rgb(239, 246, 255)
+        Note over R,BD: Geração do QR Code (RF-07)
+        R->>APP: Seleciona o aluno e solicita o QR Code
+        APP->>API: Solicita QR Code (alunoId, sessão autenticada)
+        API->>BD: Busca vínculo ativo entre responsável e aluno
+        BD-->>API: Vínculo (ou vazio)
+
+        alt Vínculo inexistente, revogado ou responsável inativo
+            API-->>APP: Acesso negado
+            APP-->>R: Exibe mensagem de erro
+        else Vínculo ativo
+            API->>API: Gera token assinado (vínculo, validade de 24h, id único)
+            API->>BD: Salva QRCode com status ATIVO
+            BD-->>API: Confirmação
+            API-->>APP: Devolve QR Code (token)
+            APP->>APP: Armazena o QR Code no dispositivo
+            APP-->>R: Exibe o QR Code
         end
     end
 
-    %% Fase 3: Registro da Retirada
-    rect rgb(240, 255, 240)
-        note over Func, DB: Registro da Retirada (RF-09)
-        opt Validação Com Sucesso
-            Func->>App: Confirma liberação do aluno
-            App->>Server: Solicita registro de retirada
-            Server->>DB: Salva registro (Aluno, Responsável, Data/Hora atual)
-            DB-->>Server: Confirmação de salvamento
-            Server-->>App: Confirmação de retirada realizada
-            App-->>Func: Notifica liberação concluída
+    %% ===================== RF-08 / RF-09: VALIDAR E REGISTRAR =====================
+    rect rgb(240, 253, 244)
+        Note over R,BD: Validação e registro da retirada (RF-08 e RF-09)
+        R->>F: Apresenta o QR Code (app ou web, mesmo sem internet)
+        F->>LEI: Lê o QR Code com a câmera
+        LEI->>LEI: Decodifica o token
+
+        alt Portaria com conexão à internet
+            LEI->>API: Envia token para validação
+            API->>BD: Consulta QRCode e vínculo
+            BD-->>API: Dados do QR Code, vínculo, aluno e responsável
+            API->>API: Verifica existência, validade, status ATIVO e vínculo ativo
+
+            alt QR Code válido
+                API->>BD: Registra retirada (aluno, responsável, funcionário, data e hora)
+                API->>BD: Atualiza QRCode para USADO
+                BD-->>API: Confirmação
+                API-->>LEI: Retirada autorizada e registrada
+                LEI-->>F: Exibe confirmação com dados do aluno e do responsável
+                F-->>R: Libera o aluno
+            else Inválido, expirado, revogado ou já utilizado
+                API-->>LEI: Retirada negada com o motivo
+                LEI-->>F: Exibe o motivo da recusa
+                F-->>R: Informa a recusa (nenhuma retirada é registrada)
+            end
+
+        else Portaria sem conexão (modo offline)
+            LEI->>LEI: Valida assinatura criptográfica e validade do token
+
+            alt Assinatura e validade confirmadas
+                LEI->>LEI: Guarda a retirada na fila local de sincronização
+                LEI-->>F: Retirada autorizada (modo offline)
+                F-->>R: Libera o aluno
+            else Assinatura inválida ou token expirado
+                LEI-->>F: Retirada negada com o motivo
+                F-->>R: Informa a recusa
+            end
         end
+    end
+
+    %% ===================== SINCRONIZAÇÃO OFFLINE =====================
+    opt Conexão restabelecida e há retiradas offline pendentes
+        LEI->>API: Sincroniza retiradas da fila local
+        API->>BD: Confere se o QR Code já foi usado ou revogado
+        BD-->>API: Situação atual do QR Code
+        API->>BD: Registra retiradas e atualiza QRCode para USADO
+        API-->>LEI: Sincronização concluída
+        LEI->>LEI: Remove itens sincronizados da fila local
     end
