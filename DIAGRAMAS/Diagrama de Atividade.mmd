@@ -1,37 +1,72 @@
-stateDiagram-v2
-    direction TB
+---
+title: QRStudy – Diagrama de Atividade (Cadastro, Autorização e Retirada do Aluno)
+---
+flowchart TD
+    classDef inicio fill:#111827,stroke:#111827,color:#ffffff
+    classDef fim fill:#111827,stroke:#111827,color:#ffffff
+    classDef decisao fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef negado fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+    classDef ok fill:#dcfce7,stroke:#16a34a,color:#14532d
 
-    [*] --> CadastroResponsavel: Responsável preenche dados (RF-02)
-    CadastroResponsavel --> EnvioDocs: Envia documentos (RF-03)
-    EnvioDocs --> AguardandoAprovacao: Aguarda análise da escola
+    INI(("●")):::inicio
 
-    state "Análise Administrativa (RF-04)" as Analise {
-        AguardandoAprovacao --> ValidarCadastro
-        state is_approved <<choice>>
-        ValidarCadastro --> is_approved
-    }
+    subgraph RESP["👤 Responsável"]
+        direction TB
+        R1["Cadastrar-se e selecionar a escola do aluno<br/>(RF-02)"]
+        R2["Enviar documentos para validação<br/>(RF-03)"]
+        R3["Consultar motivo da rejeição<br/>e reenviar documentos"]
+        R4["Fazer login<br/>(RF-13)"]
+        R5["Escolher o aluno e gerar o QR Code<br/>(RF-07)"]
+        R6["Apresentar o QR Code na portaria<br/>(app, mesmo offline, ou web)"]
+        R7["Receber o aluno"]
+    end
 
-    is_approved --> CadastroRejeitado: Dados/Docs Inválidos
-    CadastroRejeitado --> [*]: Notifica Responsável
+    subgraph ADM["🏫 Administrador da escola"]
+        direction TB
+        A1["Analisar dados e documentos do cadastro<br/>(RF-04)"]
+        D1{"Cadastro<br/>aprovado?"}:::decisao
+        A2["Rejeitar e informar o motivo<br/>(registrado em log)"]:::negado
+        A3["Aprovar cadastro<br/>(registrado em log)"]:::ok
+        A4["Vincular responsável ao aluno<br/>(RF-06)"]
+    end
 
-    is_approved --> CadastroAprovado: Cadastro Validado
-    CadastroAprovado --> VinculoAluno: Escola vincula Responsável ao Aluno (RF-06)
-    
-    state "Fluxo de Retirada (Portaria)" as Retirada {
-        VinculoAluno --> GerarQRCode: Responsável solicita QR Code (RF-07)
-        GerarQRCode --> ApresentarQRCode: Exibe QR Code no App/Navegador
-        ApresentarQRCode --> EscanearQRCode: Funcionário lê QR Code com a câmera (RF-08)
-        
-        state is_valid <<choice>>
-        EscanearQRCode --> is_valid: Sistema valida QR Code
-        
-        is_valid --> QRCodeInvalido: Inválido / Não Autorizado
-        QRCodeInvalido --> RecusarSaida: Notifica erro e recusa saída
-        RecusarSaida --> [*]
+    subgraph SIS["⚙️ Sistema QRStudy"]
+        direction TB
+        S1["Registrar cadastro como pendente<br/>e armazenar documentos"]
+        S3["Liberar acesso do responsável<br/>às funções de retirada"]
+        S4["Gerar QR Code único e assinado<br/>validade 24h, uso único"]
+        S5["Armazenar QR Code no dispositivo<br/>do responsável"]
+        D2{"Portaria<br/>com internet?"}:::decisao
+        S6["Validar no servidor:<br/>existe, na validade, não revogado,<br/>não usado, vínculo ativo"]
+        S7["Validar localmente pela<br/>assinatura criptográfica (JWT)"]
+        D3{"QR Code<br/>válido?"}:::decisao
+        S8["Negar retirada e exibir o motivo<br/>(inválido, expirado, revogado ou já usado)"]:::negado
+        S9["Registrar retirada:<br/>aluno, responsável, data e hora<br/>(RF-09)"]:::ok
+        S10["Marcar QR Code como utilizado"]
+        S11["Sincronizar registro quando<br/>a conexão for restabelecida<br/>(se validado offline)"]
+    end
 
-        is_valid --> QRCodeValido: Válido e Autorizado
-        QRCodeValido --> RegistrarRetirada: Registra Aluno, Responsável e Horário (RF-09)
-        RegistrarRetirada --> LiberaçãoConcluida: Libera a saída do aluno
-    }
+    subgraph FUNC["🚪 Funcionário da portaria"]
+        direction TB
+        F1["Ler o QR Code com a câmera<br/>do celular ou tablet<br/>(RF-08)"]
+        F2["Informar o motivo da recusa<br/>ao responsável"]
+        F3["Liberar o aluno"]
+    end
 
-    LiberaçãoConcluida --> [*]
+    FIM1(("◉")):::fim
+    FIM2(("◉")):::fim
+
+    %% Cadastro e aprovação
+    INI --> R1 --> R2 --> S1 --> A1 --> D1
+    D1 -- "Não" --> A2 --> R3 --> A1
+    D1 -- "Sim" --> A3 --> A4 --> S3
+
+    %% Geração do QR Code
+    S3 --> R4 --> R5 --> S4 --> S5 --> R6
+
+    %% Retirada
+    R6 --> F1 --> D2
+    D2 -- "Sim" --> S6 --> D3
+    D2 -- "Não" --> S7 --> D3
+    D3 -- "Não" --> S8 --> F2 --> FIM1
+    D3 -- "Sim" --> S9 --> S10 --> S11 --> F3 --> R7 --> FIM2
