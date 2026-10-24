@@ -48,7 +48,7 @@
 
 ---
 
-### **Persona 2: Direção Escolar / Gestão Administrativa**
+### **Persona 2: Direção / Gestão Administrativa**
 
 #### **Cartão Lateral**
 
