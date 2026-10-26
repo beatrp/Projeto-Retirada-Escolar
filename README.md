@@ -18,11 +18,11 @@ A proposta central é melhorar a gestão das saídas e entradas dos estudantes, 
 
 ```mermaid
 flowchart TD
-    A[Responsável] --> B[Solicita retirada]
-    B --> C[Escola valida autorização]
+    A[Responsável ou Terceiro Previamente Autorizado] --> B[Solicita retirada do Aluno]
+    B --> C[Escola valida a Autorização]
     C --> D{Autorizado?}
     D -- Sim --> E[Aluno liberado]
     D -- Não --> F[Solicitação negada]
     E --> G[Registro finalizado]
-    F --> H[Contato com responsável]
+    F --> H[Contato com Responsável / Confirmação Encaminhada]
 ```
