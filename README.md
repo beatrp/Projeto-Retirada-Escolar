@@ -14,7 +14,7 @@ A proposta central é melhorar a gestão das saídas e entradas dos estudantes, 
 - Melhorar a comunicação entre escola e família;
 - Organizar o fluxo de informações de forma simples e legível.
 
-## Fluxo do Processo
+## Fluxo SIMPLIFICADO do Processo
 
 ```mermaid
 flowchart TD
