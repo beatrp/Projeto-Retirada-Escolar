@@ -176,22 +176,28 @@
                 <div class="column-header">Certezas</div>
 
                 <div class="card">
-                    <strong>Tecnologias Definidas:</strong> O projeto utilizará Node.js no back-end, React (Web), Tailwind CSS e React Native para o aplicativo mobile.
+                    <strong>Tecnologias Definidas:</strong> O projeto utilizará Node.js no back-end, React (Web), Tailwind CSS, React Native para o aplicativo mobile e banco de dados relacional PostgreSQL.
                 </div>
                 <div class="card">
                     <strong>Público-Alvo e Perfil de Acesso:</strong> Foco em escolas infantis e fundamentais. Perfis: Administradores da escola, funcionários da portaria e responsáveis legais.
                 </div>
                 <div class="card">
-                    <strong>Limites Financeiros e Prazos:</strong> Custo total teto de R$ 300.000,00. Prazos finais: Desenvolvimento até 12/11/2027 e Implantação até 12/02/2028.
+                    <strong>Limites Financeiros e Prazos:</strong> Custo teto de R$ 300.000,00 (já com margem de contingência). Prazos finais: Desenvolvimento até 12/05/2027 e Implantação até 12/07/2027.
                 </div>
                 <div class="card">
-                    <strong>Uso Offline do QR Code:</strong> O aplicativo mobile permitirá armazenar o QR Code para apresentação mesmo sem internet no celular do responsável.
+                    <strong>Regras do QR Code:</strong> O QR Code é gerado por vínculo entre responsável e aluno, tem validade de 24 horas, é de uso único e pode ser exibido sem internet no celular do responsável.
                 </div>
                 <div class="card">
-                    <strong>Conformidade Legal:</strong> O sistema deve obrigatoriamente estar em conformidade com a LGPD (Lei Geral de Proteção de Dados).
+                    <strong>Autorização Emergencial de Terceiros (RF-15):</strong> O responsável legal poderá gerar um QR Code temporário (ex.: 4 horas) para um terceiro, com verificação ou aprovação da escola.
                 </div>
                 <div class="card">
-                    <strong>Fora do Escopo:</strong> Não inclui compra de hardware (tablets/leitores), instalação de rede/internet, servidores físicos e treinamentos extensivos.
+                    <strong>Conformidade Legal e Histórico:</strong> O sistema deve estar em conformidade com a LGPD, com registro de consentimento do responsável, e guardar o histórico de retiradas por no mínimo 5 anos.
+                </div>
+                <div class="card">
+                    <strong>Recuperação de Acesso:</strong> Nesta versão, a redefinição de senha ocorre pelos meios tradicionais (e-mail de recuperação ou suporte presencial com a administração da escola). A senha temporária emergencial, com notificação em tempo real à secretaria, é evolução futura.
+                </div>
+                <div class="card">
+                    <strong>Fora do Escopo:</strong> Compra de hardware, rede/internet, servidores físicos e hospedagem, treinamentos extensivos, integrações externas, notificações, reconhecimento facial e senha temporária emergencial.
                 </div>
             </section>
 
@@ -200,19 +206,22 @@
                 <div class="column-header">Suposições</div>
 
                 <div class="card">
-                    <strong>Adoção Digital:</strong> Supõe-se que a maioria dos responsáveis possui smartphones compatíveis e facilidade para gerar o QR Code.
+                    <strong>Adoção Digital:</strong> Supõe-se que a maioria dos responsáveis possui smartphones compatíveis (Android 10+ ou iOS 15+) e facilidade para gerar o QR Code.
                 </div>
                 <div class="card">
-                    <strong>Adaptação da Portaria:</strong> Supõe-se que os funcionários da portaria se adaptarão rapidamente à transição das listas impressas para o aplicativo/tablet.
+                    <strong>Adaptação da Portaria:</strong> Supõe-se que os funcionários da portaria se adaptarão rapidamente à transição das listas impressas para o aplicativo/tablet, com apenas um treinamento simples.
                 </div>
                 <div class="card">
                     <strong>Qualidade de Leitura de Câmera:</strong> Supõe-se que dispositivos de entrada na portaria conseguirão ler os QR Codes mesmo com telas de brilho baixo ou arranhadas.
                 </div>
                 <div class="card">
-                    <strong>Capacidade em Picos:</strong> Supõe-se que a infraestrutura aguentará acessos e validações simultâneas nos exatos horários de saída dos alunos.
+                    <strong>Capacidade em Picos:</strong> Supõe-se que a infraestrutura suportará pelo menos 500 usuários simultâneos nos horários de saída dos alunos.
                 </div>
                 <div class="card">
-                    <strong>Sincronização Offline na Escola:</strong> Supõe-se que o sistema armazenará localmente na portaria as validações caso ocorra uma queda temporária de internet na escola.
+                    <strong>Validação Offline na Escola:</strong> Supõe-se que a portaria poderá validar o QR Code localmente (token assinado) em caso de queda de internet e sincronizar o registro da retirada quando a conexão voltar.
+                </div>
+                <div class="card">
+                    <strong>Cadastro de Autorizados:</strong> Supõe-se que os responsáveis aceitarão que avós, motoristas e outros autorizados façam o próprio cadastro, cada um aprovado pela escola.
                 </div>
             </section>
 
@@ -221,19 +230,22 @@
                 <div class="column-header">Dúvidas</div>
 
                 <div class="card">
-                    <strong>Planos de Contingência:</strong> Qual o fluxo da portaria caso o responsável chegue sem bateria no celular, sem celular ou sem o QR Code em mãos?
+                    <strong>Planos de Contingência:</strong> Como a portaria tratará o responsável sem celular, sem bateria ou sem o QR Code, já que o reconhecimento facial e a senha temporária ficaram para versões futuras?
                 </div>
                 <div class="card">
-                    <strong>Autorização de Terceiros:</strong> Como o sistema lidará com liberação pontual para terceiros (ex: tios, motoristas de aplicativo ou vizinhos) de última hora?
+                    <strong>Prazo para Aprovação Interna:</strong> Qual será o tempo médio de análise e aprovação, pela escola, dos cadastros e documentos enviados pelos responsáveis?
                 </div>
                 <div class="card">
-                    <strong>Prazo para Aprovação Interna:</strong> Quanto tempo a secretaria levará para validar a documentação anexada pelos responsáveis antes do acesso?
+                    <strong>Carga Inicial de Dados:</strong> Como será feita a importação em massa de alunos e turmas já existentes (CSV/Excel), uma vez que a integração com sistemas escolares está fora do escopo desta versão?
                 </div>
                 <div class="card">
-                    <strong>Carga Inicial de Dados:</strong> Como será feita a importação em massa dos alunos e turmas cadastrados no sistema atual da escola (via CSV/Excel)?
+                    <strong>Conflitos de Sincronização Offline:</strong> Como tratar casos em que o mesmo QR Code é lido em duas portarias, ou em que o vínculo é revogado antes da sincronização?
                 </div>
                 <div class="card">
-                    <strong>Notificações em Tempo Real:</strong> Haverá envio de alertas instantâneos (Push/SMS) aos pais no momento exato em que o aluno for validado na portaria?
+                    <strong>Notificações e Reconhecimento Facial:</strong> Como e quando serão oferecidos o lembrete ou a confirmação de retirada e o reconhecimento facial, previstos como evolução futura?
+                </div>
+                <div class="card">
+                    <strong>Senha Temporária Emergencial (futuro):</strong> Como o módulo futuro conciliará a automação com a validação presencial ou visual pela secretaria e portaria, de modo a evitar personificação ou uso indevido?
                 </div>
             </section>
         </main>
