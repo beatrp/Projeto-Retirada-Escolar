@@ -1,1 +1,3 @@
-(https://qr-study-admin-prototype.vercel.app)
+https://github.com/beatrp/QRStudyAdminPrototype
+
+https://qrstudy-admin-prototype.vercel.app
