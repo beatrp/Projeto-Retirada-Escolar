@@ -8,4 +8,4 @@
 
 ### QUESTIONARIO TESTE DE USABILIDADE: https://forms.gle/cfPdPfU6JeuGtXok8
 
-### RESPOSTAS ANONIMIZADAS: 
+### RESPOSTAS ANONIMIZADAS: https://docs.google.com/document/d/1itsP9nKADZJpQ3ggEnlQFcUWjA3dKGfl93XpGRhEvRY/edit?usp=sharing
